@@ -17,16 +17,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: |
-          apt-get update
-          apt-get install -y gcovr
+      - name: Navigate to source directory
+        run: cd source
 
       - name: Run unit tests
+        working-directory: source
         run: |
           make tests_run
 
       - name: Generate coverage reports
+        working-directory: source
         run: |
           mkdir -p artifacts
           make coverage > artifacts/coverage_output.txt
@@ -35,5 +35,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: coverage_outputs
-          path: artifacts/
+          path: source/artifacts/
         if: always()
