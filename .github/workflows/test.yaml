@@ -53,7 +53,7 @@ jobs:
         if: always()
 
       - name: Upload coverage outputs
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: coverage_outputs
           path: source/artifacts/
