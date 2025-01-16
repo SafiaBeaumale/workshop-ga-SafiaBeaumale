@@ -1,0 +1,60 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - dev
+      - main
+  pull_request:
+    branches:
+      - dev
+      - main
+
+jobs:
+  unit-test:
+    runs-on: ubuntu-20.04
+
+    container:
+      image: epitechcontent/epitest-docker
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set execute permission for functional-test.sh
+        working-directory: source
+        run: chmod +x functional-test.sh
+
+      - name: Compile the executable
+        working-directory: source
+        run: make CFLAGS="" LDFLAGS=""
+
+      - name: Run functional tests
+        working-directory: source
+        run: |
+          mkdir -p artifacts
+          ./functional-test.sh > artifacts/functional_test_output.txt
+
+      - name: Run unit tests
+        working-directory: source
+        run: make tests_run
+
+      - name: Generate coverage reports
+        working-directory: source
+        run: |
+          mkdir -p artifacts
+          make coverage > artifacts/coverage_output.txt
+
+      - name: Upload functional test outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: function-tests_outputs
+          path: source/artifacts/
+        if: always()
+
+      - name: Upload coverage outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage_outputs
+          path: source/artifacts/
+        if: always()
