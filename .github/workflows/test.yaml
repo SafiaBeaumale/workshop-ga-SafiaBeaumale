@@ -19,8 +19,16 @@ jobs:
 
       - name: Run unit tests
         run: |
-          make tests_run
+          mkdir -p artifacts
+          make tests_run > artifacts/unit_tests_output.txt
 
       - name: Run coverage
         run: |
-          make coverage
+          make coverage > artifacts/coverage_output.txt
+
+      - name: Upload coverage outputs
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage_outputs
+          path: artifacts/
+        if: always()
