@@ -17,13 +17,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Install dependencies
+        run: |
+          apt-get update
+          apt-get install -y gcovr
+
       - name: Run unit tests
         run: |
-          mkdir -p artifacts
-          make tests_run > artifacts/unit_tests_output.txt
+          make tests_run
 
-      - name: Run coverage
+      - name: Generate coverage reports
         run: |
+          mkdir -p artifacts
           make coverage > artifacts/coverage_output.txt
 
       - name: Upload coverage outputs
