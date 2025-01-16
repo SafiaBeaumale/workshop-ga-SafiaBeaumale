@@ -5,6 +5,10 @@ on:
     branches:
       - dev
       - main
+  pull_request:
+    branches:
+      - dev
+      - main
 
 jobs:
   unit-test:
@@ -35,5 +39,31 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: coverage_outputs
+          path: source/artifacts/
+        if: always()
+
+  functional-test:
+    runs-on: ubuntu-20.04
+
+    container:
+      image: epitechcontent/epitest-docker
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Navigate to source directory
+        run: cd source
+
+      - name: Run functional tests
+        working-directory: source
+        run: |
+          mkdir -p artifacts
+          ./functional-test.sh > artifacts/functional_test_output.txt
+
+      - name: Upload functional test outputs
+        uses: actions/upload-artifact@v3
+        with:
+          name: function-tests_outputs
           path: source/artifacts/
         if: always()
