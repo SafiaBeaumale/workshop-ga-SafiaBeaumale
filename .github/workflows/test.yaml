@@ -46,14 +46,14 @@ jobs:
           make coverage > artifacts/coverage_output.txt
 
       - name: Upload functional test outputs
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: function-tests_outputs
           path: source/artifacts/
         if: always()
 
       - name: Upload coverage outputs
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: coverage_outputs
           path: source/artifacts/
