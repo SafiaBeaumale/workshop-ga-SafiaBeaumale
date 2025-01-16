@@ -1,57 +1,65 @@
+##
+## PERSONAL PROJECT, 2020
+## DO OP
+## File description: Makefile
+##
+
 ## Var def ##
-SHELL       =   /bin/sh
-CC          =   gcc
-RM          =   rm -f
+SHELL		=	/bin/sh
+CC			= 	gcc
+RM			= 	rm -f
 ##############
 
 ## Sources ##
-MAIN        =   main.c
+MAIN		=	main.c
 
-BIN_SRC     =   src/do-op.c              \
-                src/error_handling.c     \
+# Enable CLION job
+SRC			=	**/*.c
 
-TEST_SRC    =   tests/do-op.tests.c      \
-                tests/error_handling.tests.c
+BIN_SRC		=	src/do-op.c		  	 \
+				src/error_handling.c \
 
-INC         = -I./include/
+TEST_SRC	=	tests/do-op.tests.c				\
+				tests/error_handling.tests.c
+
+INC			= -I./include/
 #############
 
 ## Obj     ##
-MAIN_OBJ    =   $(MAIN:.c=.o)
-SRC_OBJ     =   $(BIN_SRC:.c=.o)
-TEST_OBJ    =   $(TEST_SRC:.c=.o)
+MAIN_OBJ	=	$(MAIN:.c=.o)
+SRC_OBJ		=	$(BIN_SRC:.c=.o)
+TEST_OBJ	=	$(TEST_SRC:.c=.o)
 #############
 
 ## Flags   ##
-CFLAGS      =   -Wall -Wextra
-TEST_CFLAGS =   -Wall -Wextra --coverage
-CPPFLAGS    =   $(INC)
-LDFLAGS     =
-TEST_LDFLAGS =  -lcriterion -DUNIT_TEST
+CFLAGS		=	-Wall -Wextra
+CPPFLAGS	=	$(INC)
+LDFLAGS		=
 #############
 
 ## Names   ##
-BIN         =   do-op
-TEST_BIN    =   unit_tests
+BIN			=	do-op
+TEST_BIN	=	unit_tests
 #############
 
 ## Rules   ##
 .PHONY: all
-all:    $(BIN)
-
-$(BIN): $(MAIN_OBJ) $(SRC_OBJ)
-	$(CC) -o $(BIN) $(MAIN_OBJ) $(SRC_OBJ) $(CFLAGS) $(CPPFLAGS)
+all:	$(BIN)
+$(BIN):	$(MAIN_OBJ) $(SRC_OBJ)
+	$(CC) -o $(BIN) $(MAIN_OBJ) $(SRC_OBJ)
 
 ## Debug
-.PHONY: debug
+.PHONY:	debug
 debug: fclean
-debug:  CFLAGS += -g3 -DDEBUG
-debug:  $(BIN)
+debug:	CFLAGS += -g3 -DDEBUG
+debug:	$(BIN)
 
 ## Run test
 .PHONY: tests_run
-tests_run:  $(SRC_OBJ) $(TEST_OBJ)
-	$(CC) -o $(TEST_BIN) $(SRC_OBJ) $(TEST_OBJ) $(TEST_LDFLAGS) $(TEST_CFLAGS) $(CPPFLAGS)
+tests_run:  CFLAGS += --coverage
+tests_run:  LDFLAGS += -lcriterion -DUNIT_TEST
+tests_run:	$(SRC_OBJ) $(TEST_OBJ)
+	$(CC) -o $(TEST_BIN) $(SRC_OBJ) $(TEST_OBJ) $(LDFLAGS) $(CFLAGS) $(CPPFLAGS)
 	./$(TEST_BIN)
 
 ## Get coverage
@@ -63,16 +71,17 @@ coverage:
 ## Clear rules
 .PHONY: clean
 clean:
-	@$(RM) $(MAIN_OBJ)
-	@$(RM) $(SRC_OBJ)
-	@$(RM) $(TEST_OBJ)
+	@$(RM)	$(MAIN_OBJ)
+	@$(RM)	$(SRC_OBJ)
+	@$(RM)	$(TEST_OBJ)
 
 .PHONY: fclean
 fclean: clean
-	@$(RM) $(BIN)
-	@$(RM) $(TEST_BIN)
-	@$(RM) **/*.gc*
+	@$(RM)	$(BIN)
+	@$(RM)  $(TEST_BIN)
+	@$(RM)	**/*.gc*
 
 .PHONY: re
-re: fclean all clean
+re:	fclean all clean
+
 
