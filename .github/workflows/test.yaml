@@ -52,8 +52,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Navigate to source directory
-        run: cd source
+      - name: Set execute permission for functional-test.sh
+        working-directory: source
+        run: chmod +x functional-test.sh
 
       - name: Run functional tests
         working-directory: source
